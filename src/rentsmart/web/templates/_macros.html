@@ -1,0 +1,18 @@
+{% macro tag(env) %}<span class="tag"><span class="kind k-{{ env.kind }}">{{ env.kind }}</span>{{ env.source }} · {{ env.as_of }}</span>{% if env.stale %}<span class="badge stale">STALE</span>{% endif %}{% endmacro %}
+
+{% macro because(env, label="because") %}
+{% if env.evidence or env.limitations %}
+<details><summary>{{ label }}</summary>
+{% if env.evidence %}<ul>{% for e in env.evidence %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+{% if env.limitations %}<p class="lim-h">Limitations</p><ul>{% for l in env.limitations %}<li>{{ l }}</li>{% endfor %}</ul>{% endif %}
+</details>
+{% endif %}
+{% endmacro %}
+
+{% macro advice_list(items, empty) %}
+{% if items %}
+<ol class="adv">{% for i in items %}<li><p>{{ i.value }}</p>{{ because(i) }}</li>{% endfor %}</ol>
+{% else %}
+<p class="none">{{ empty }}</p>
+{% endif %}
+{% endmacro %}

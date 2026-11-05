@@ -1,0 +1,73 @@
+[
+  {
+    "id": "10468-Sw-32nd-Ave,-Gainesville,-FL-32608",
+    "formattedAddress": "10468 Sw 32nd Ave, Gainesville, FL 32608",
+    "addressLine1": "10468 Sw 32nd Ave",
+    "addressLine2": null,
+    "city": "Gainesville",
+    "state": "FL",
+    "stateFips": "12",
+    "zipCode": "32608",
+    "county": "Alachua",
+    "countyFips": "001",
+    "latitude": 29.625622,
+    "longitude": -82.453263,
+    "propertyType": "Single Family",
+    "bedrooms": 5,
+    "bathrooms": 5.5,
+    "squareFootage": 4200,
+    "lotSize": 18295,
+    "yearBuilt": 2019,
+    "assessorID": "06852-100-066",
+    "legalDescription": "ESTATES OF WILDS PLANTATION PB 30 PG 56 LOT 66 OR 4545/1738",
+    "subdivision": "ESTATES OF WILDS PLANTATION",
+    "lastSaleDate": "2018-02-26T00:00:00.000Z",
+    "lastSalePrice": 140000,
+    "features": {
+      "cooling": true,
+      "coolingType": "Central",
+      "exteriorType": "Stucco",
+      "floorCount": 2,
+      "heating": true,
+      "heatingType": "Forced Air",
+      "roofType": "Asphalt"
+    },
+    "taxAssessments": {
+      "2023": {
+        "year": 2023,
+        "value": 973672,
+        "land": 130000,
+        "improvements": 843672
+      },
+      "2024": {
+        "year": 2024,
+        "value": 1028104,
+        "land": 160000,
+        "improvements": 868104
+      },
+      "2025": {
+        "year": 2025,
+        "value": 1040937,
+        "land": 185000,
+        "improvements": 855937
+      }
+    },
+    "propertyTaxes": {
+      "2023": {
+        "year": 2023,
+        "total": 20679
+      },
+      "2024": {
+        "year": 2024,
+        "total": 21542
+      }
+    },
+    "history": {
+      "2018-02-26": {
+        "event": "Sale",
+        "date": "2018-02-26T00:00:00.000Z",
+        "price": 140000
+      }
+    }
+  }
+]

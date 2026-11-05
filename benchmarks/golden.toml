@@ -1,0 +1,64 @@
+# Golden set for Phase 3 evaluation (problem statement §12).
+#
+# One entry per address with a known outcome. The fixture in
+# tests/fixtures/rentcast/<slug>/ must be recorded while the property was
+# listed, before it rented, so the comps carry no hindsight.
+#
+# status = "pending" until it rents; then set "leased" and fill lease_price
+# and lease_date. Only leased entries count toward coverage and width.
+
+[[entry]]
+slug = "gainesville-sw73rd"
+address = "8184 SW 73rd Ln, Gainesville, FL 32608"
+recorded = 2026-10-20
+listed = 2026-05-21
+# Listed at $3,200 with several reductions; latest reduction 2026-10-20 (recording day).
+asking = 2995
+status = "pending"
+# lease_price =
+# lease_date =
+
+[[entry]]
+slug = "austin-alvin-high"
+address = "8420 Alvin High Ln, Austin, TX 78729"
+recorded = 2026-10-21
+listed = 2026-10-21
+# Recorded on listing day.
+asking = 2350
+status = "pending"
+# lease_price =
+# lease_date =
+
+[[entry]]
+slug = "austin-tomanet"
+address = "12814 Tomanet Trl, # A, Austin, TX 78727"
+recorded = 2026-10-21
+listed = 2026-10-20
+# Unit record has no beds/baths/sqft, so the rent estimate was requested without them.
+asking = 1500
+status = "pending"
+# lease_price =
+# lease_date =
+
+[[entry]]
+slug = "cincinnati-salvador"
+address = "2302 Salvador St, # 1, Cincinnati, OH 45230"
+recorded = 2026-10-21
+listed = 2026-09-18
+# Condo, 2 bd / 2 ba (per owner). RentCast matched "Apt 1"; its unit record has no
+# beds/baths/sqft, so the rent estimate was requested without them.
+asking = 1400
+status = "pending"
+# lease_price =
+# lease_date =
+
+[[entry]]
+slug = "gainesville-sw32nd"
+address = "10468 SW 32nd Ave, Gainesville, FL 32608"
+recorded = 2026-10-21
+listed = 2026-09-05
+# High-end: 5 bd / 5.5 ba, 4,200 sqft.
+asking = 8000
+status = "pending"
+# lease_price =
+# lease_date =

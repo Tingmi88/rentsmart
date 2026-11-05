@@ -1,0 +1,18 @@
+{% extends "_layout.html" %}
+{% block title %}rentsmart{% endblock %}
+{% block body %}
+<header><h1>rentsmart</h1><p class="meta">Rental pricing brief. Local to this machine.</p></header>
+{% if error %}<p class="banner">{{ error }}</p>{% endif %}
+<form class="card form" action="/brief" method="get" data-remember>
+  <label>Street address <input name="street" required maxlength="120" autocomplete="address-line1" placeholder="123 Main St # 2" value="{{ values.get('street', '') }}"></label>
+  <div class="row">
+    <label>City <input name="city" required maxlength="60" autocomplete="address-level2" placeholder="Gainesville" value="{{ values.get('city', '') }}"></label>
+    <label>State <input name="state" required minlength="2" maxlength="2" pattern="[A-Za-z]{2}" autocomplete="address-level1" placeholder="FL" value="{{ values.get('state', '') }}"></label>
+    <label>ZIP <input name="zip" required inputmode="numeric" pattern="[0-9]{5}(-[0-9]{4})?" maxlength="10" autocomplete="postal-code" placeholder="32601" value="{{ values.get('zip', '') }}"></label>
+  </div>
+  <label>Asking rent (optional) <input name="asking" inputmode="numeric" value="{{ values.get('asking', '') }}"></label>
+  <label>Listed on (optional) <input type="date" name="listed" value="{{ values.get('listed', '') }}"></label>
+  <div class="actions"><button type="submit">Show brief</button><button type="button" class="quiet" data-clear hidden>Clear</button></div>
+  <p class="cap">Opening a brief never spends API calls. If it isn't cached, you'll be asked first. {{ usage }} used this month on this machine.</p>
+</form>
+{% endblock %}

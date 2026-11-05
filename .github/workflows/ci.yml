@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --locked
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      - run: uv run pyright
+      # No RENTCAST_API_KEY here: tests replay recorded fixtures only.
+      - run: uv run pytest
+      - name: Golden-set evaluation (replays fixtures, no API calls)
+        run: uv run rentsmart-eval --check
+
+  ui:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --locked
+      - run: uv run playwright install --with-deps chromium
+      # Browser tests against the local app; RentCast is mocked in-process, no API key.
+      - run: uv run pytest -m ui

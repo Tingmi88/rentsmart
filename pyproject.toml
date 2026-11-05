@@ -1,0 +1,84 @@
+[project]
+name = "rentsmart"
+version = "0.4.0"
+description = "Independent, evidence-backed rental pricing brief for US homeowners."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Tingting W", email = "59345728+Tingmi88@users.noreply.github.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.162.0",
+    "httpx>=0.28.1",
+    "jinja2>=3.1.6",
+    "pydantic>=2",
+    "typer>=0.27.3",
+    "uvicorn>=0.54.0",
+]
+
+[project.scripts]
+rentsmart = "rentsmart.cli:app"
+rentsmart-eval = "rentsmart.evaluation:app"
+rentsmart-ui = "rentsmart.web.app:cli"
+
+[build-system]
+requires = ["uv_build>=0.13.3,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.7.0",
+    "pyright>=1.1.414",
+    "pytest>=9.1.1",
+    "pytest-playwright>=0.10.0",
+    "respx>=0.23.1",
+    "ruff>=0.17.1",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
+
+[tool.pyright]
+include = ["src", "tests", "scripts"]
+strict = ["src"]
+pythonVersion = "3.12"
+venvPath = "."
+venv = ".venv"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra -m 'not ui'"
+markers = ["ui: browser tests via Playwright; run with `pytest -m ui` after `playwright install chromium`"]
+
+[tool.semantic_release]
+version_toml = ["pyproject.toml:project.version"]
+tag_format = "v{version}"
+commit_message = "chore(release): v{version}"
+allow_zero_version = true
+major_on_zero = false
+# Keep uv.lock in step with the new version (CI runs `uv sync --locked`), then build dists
+# to attach to the GitHub release.
+build_command = """
+uv lock --upgrade-package rentsmart
+git add uv.lock
+uv build
+"""
+
+[tool.semantic_release.branches.main]
+match = "main"
+
+[tool.semantic_release.commit_parser_options]
+minor_tags = ["feat"]
+patch_tags = ["fix", "perf"]
+
+[tool.semantic_release.changelog]
+exclude_commit_patterns = ["^chore\\(release\\)"]
+
+[tool.semantic_release.changelog.default_templates]
+changelog_file = "CHANGELOG.md"

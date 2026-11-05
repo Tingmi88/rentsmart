@@ -1,0 +1,127 @@
+{% from "_macros.html" import tag, because, advice_list %}
+{% if brief.stale %}<p class="banner">Some data is older than the freshness threshold. Marked STALE below.</p>{% endif %}
+{% if brief.too_few_comps %}<p class="banner">Too few comps for a reliable range. What exists is shown.</p>{% endif %}
+<section class="card summary">
+  <h2>Rent estimate (monthly)</h2>
+  {% set est = brief.rent_estimate %}
+  {% if est is not none and est.low is not none and est.high is not none %}
+  <p class="big">{{ est.low|money }} – {{ est.high|money }} <small>mid {{ est.value|money }}</small></p>
+  {% elif est is not none %}
+  <p class="big">{{ est.value|money }}</p>
+  {% else %}
+  <p class="none">No rent estimate.</p>
+  {% endif %}
+  {% if est is not none %}{{ tag(est) }}{% endif %}
+  {% if line %}
+  <div class="pl" role="img" aria-label="Estimate range with your asking price and comps">
+    <div class="pl-band" style="left:{{ line.low_pct }}%;width:{{ line.high_pct - line.low_pct }}%"></div>
+    {% for m in line.marks %}<span class="pl-{{ m.kind }}" style="left:{{ m.pct }}%;--row:{{ m.row }}" title="{{ m.title }}"></span>{% endfor %}
+    {% for lb in line.labels %}<span class="pl-label pl-label-{{ lb.kind }}" style="left:{{ lb.pct }}%">{{ lb.text }}</span>{% endfor %}
+  </div>
+  <ul class="legend"><li><i class="lg-band"></i>estimate range</li><li><i class="lg-comp"></i>comp, delisted</li><li><i class="lg-active"></i>comp, still listed</li><li><i class="lg-old"></i>comp older than 90 days</li></ul>
+  {% endif %}
+  {% if brief.recent_comps %}
+  <p>Recent support: <strong>median {{ brief.recent_comps.value|money }}</strong>{% if brief.recent_comps.evidence %} · {{ brief.recent_comps.evidence[0] }}{% endif %}</p>
+  {% endif %}
+  {% if whatif %}<p class="whatif">What-if {{ whatif.asking|money }} (entered {{ whatif.entered|money }})</p>{% endif %}
+  {% if chips %}
+  <ul class="chips">{% for c in chips %}<li class="chip{{ ' warn' if c.warn else '' }}"><strong>{{ c.label }}</strong> {{ c.detail }}</li>{% endfor %}</ul>
+  {% endif %}
+  <p class="counts"><a href="#panel-advice" data-tab-link="panel-advice">{{ brief.suggestions|length }} suggestion{{ '' if brief.suggestions|length == 1 else 's' }} · {{ brief.agent_questions|length }} question{{ '' if brief.agent_questions|length == 1 else 's' }} for your agent</a></p>
+</section>
+
+<nav class="tabs" role="tablist">
+  <button type="button" role="tab" data-panel="panel-advice">Advice</button>
+  <button type="button" role="tab" data-panel="panel-comps">Comps {{ comps|length }}</button>
+  <button type="button" role="tab" data-panel="panel-market">Market &amp; tax</button>
+  <button type="button" role="tab" data-panel="panel-scenarios">Scenarios</button>
+  <button type="button" role="tab" data-panel="panel-details">Details</button>
+</nav>
+
+<section id="panel-advice" class="card panel" role="tabpanel">
+  <h2>Suggestions to rent faster</h2>
+  {{ advice_list(brief.suggestions, "None: the evidence in this brief doesn't support any. That is not an all-clear.") }}
+  <h2>Questions for your agent</h2>
+  {{ advice_list(brief.agent_questions, "None: the evidence in this brief doesn't support any.") }}
+</section>
+
+<section id="panel-comps" class="card panel" role="tabpanel">
+  <h2>Rental comps · newest first</h2>
+  {% if comps %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>Address</th><th class="r">Asking</th><th>Bd/Ba</th><th class="r">Sqft</th><th>Listed</th><th>Status</th></tr></thead>
+    <tbody>
+    {% for row in comps %}
+    {% if row.divider_before %}<tr class="divider"><td colspan="6">Older than 90 days: shown for context, not used in recent support</td></tr>{% endif %}
+    {% set c = row.comp %}
+    <tr class="{{ 'old' if row.stale else '' }}">
+      <td>{{ c.address.split(',')[0] }}<span class="look"><a href="{{ c.address|search_url }}" target="_blank" rel="noopener noreferrer" aria-label="Search the web for {{ c.address }}" title="Search the web"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3.5 3.5"/></svg></a><a href="{{ c.address|zillow_url }}" target="_blank" rel="noopener noreferrer" aria-label="Look up {{ c.address }} on Zillow" title="Look up on Zillow (may not be this listing)"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 7.5 8 3l5.5 4.5M4 6.5V13h8V6.5"/></svg></a></span>{% if c.distance_miles is not none %}<span class="sub">{{ '%.1f'|format(c.distance_miles) }} mi</span>{% endif %}</td>
+      <td class="r strong">{{ c.price|money }}</td>
+      <td>{{ '%g'|format(c.beds) if c.beds is not none else '?' }}/{{ '%g'|format(c.baths) if c.baths is not none else '?' }}</td>
+      <td class="r">{{ '{:,}'.format(c.sqft) if c.sqft is not none else '' }}</td>
+      <td>{{ c.listed_date or '' }}{% if c.last_seen_date %}<span class="sub">seen {{ c.last_seen_date }}</span>{% endif %}</td>
+      <td><span class="badge{{ ' b-active' if c.status == 'active' else '' }}">{{ c.status }}</span><span class="badge">{{ c.basis }}</span>{% if c.unconfirmed %}<span class="badge stale">UNCONFIRMED</span>{% endif %}{% if row.stale %}<span class="badge stale">STALE</span>{% endif %}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% else %}
+  <p class="none">No comps.</p>
+  {% endif %}
+</section>
+
+<section id="panel-market" class="card panel" role="tabpanel">
+  <div class="two">
+    <div>
+      <h2>Market speed · zip {{ brief.market.zip_code }}</h2>
+      {% set dom = brief.market.median_days_on_market %}
+      {% if dom and dom.value is not none %}
+      <p class="big">{{ '%.0f'|format(dom.value) }} days <small>median{% if brief.market.trend %}, {{ brief.market.trend.value }}{% endif %}</small></p>
+      {% if spark %}
+      <svg class="spark" viewBox="0 0 260 60" role="img" aria-label="Monthly median days on market"><polyline points="{{ spark.points }}"/></svg>
+      <p class="spark-axis"><span>{{ spark.first }}</span><span>{{ spark.last }}: {{ '%.0f'|format(spark.last_value) }} days</span></p>
+      {% endif %}
+      {{ tag(dom) }}{{ because(dom, "limitations") }}
+      {% else %}
+      <p class="none">No market statistics.</p>
+      {% endif %}
+    </div>
+    <div>
+      <h2>Property tax</h2>
+      {% set tax = brief.property_tax %}
+      {% if tax %}
+      <p class="big">{{ tax.value|money }} <small>/ year</small></p>
+      {{ tag(tax) }}
+      <p class="cap">{{ tax.evidence|join(' · ') }}. An owner cost; it does not set market rent.</p>
+      {% else %}
+      <p class="none">No tax record.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<section id="panel-scenarios" class="card panel" role="tabpanel">
+  <h2>Pricing scenarios · direction only</h2>
+  {% if brief.scenarios %}
+  <div class="scens">
+  {% for s in brief.scenarios if s.value %}
+    <div class="scen"><span class="cap">{{ s.value.label }}</span><span class="num">{{ s.value.asking_rent|money }}</span><span class="cap">{{ s.value.speed }}</span></div>
+  {% endfor %}
+  </div>
+  <p class="cap">Speed is relative to the zip median. No number of days is predicted for this home.</p>
+  {% else %}
+  <p class="none">No scenarios without a rent range.</p>
+  {% endif %}
+</section>
+
+<section id="panel-details" class="card panel" role="tabpanel">
+  <h2>Every value, with its source</h2>
+  <dl class="details">
+  {% for d in details %}
+    <dt>{{ d.label }}</dt>
+    <dd><strong>{{ d.value }}</strong> {{ tag(d.env) }}{{ because(d.env, "evidence and limitations") }}</dd>
+  {% endfor %}
+  </dl>
+</section>
+
+<footer><ul>{% for n in brief.notices %}<li>{{ n }}</li>{% endfor %}</ul></footer>

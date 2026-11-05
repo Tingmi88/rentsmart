@@ -1,0 +1,16 @@
+[
+  {
+    "id": "12814-Tomanet-Trl,---A,-Austin,-TX-78727",
+    "formattedAddress": "12814 Tomanet Trl, # A, Austin, TX 78727",
+    "addressLine1": "12814 Tomanet Trl",
+    "addressLine2": "# A",
+    "city": "Austin",
+    "state": "TX",
+    "stateFips": "48",
+    "zipCode": "78727",
+    "county": "Travis",
+    "countyFips": "453",
+    "latitude": 30.424155,
+    "longitude": -97.697345
+  }
+]

@@ -1,0 +1,96 @@
+[
+  {
+    "id": "8420-Alvin-High-Ln,-Austin,-TX-78729",
+    "formattedAddress": "8420 Alvin High Ln, Austin, TX 78729",
+    "addressLine1": "8420 Alvin High Ln",
+    "addressLine2": null,
+    "city": "Austin",
+    "state": "TX",
+    "stateFips": "48",
+    "zipCode": "78729",
+    "county": "Williamson",
+    "countyFips": "491",
+    "latitude": 30.461441,
+    "longitude": -97.759542,
+    "propertyType": "Single Family",
+    "bedrooms": 3,
+    "bathrooms": 2.5,
+    "squareFootage": 2038,
+    "lotSize": 6109,
+    "yearBuilt": 1999,
+    "assessorID": "R-16-4665-000B-0027",
+    "legalDescription": "S6936 - MILWOOD SEC 40-B, BLOCK B, LOT 27",
+    "subdivision": "MILWOOD",
+    "lastSaleDate": "2021-08-09T00:00:00.000Z",
+    "features": {
+      "cooling": true,
+      "coolingType": "Central",
+      "exteriorType": "Combination",
+      "fireplace": true,
+      "floorCount": 2,
+      "foundationType": "Slab / Mat / Raft",
+      "garage": true,
+      "garageSpaces": 1,
+      "garageType": "Garage",
+      "heating": true,
+      "heatingType": "Central",
+      "unitCount": 1
+    },
+    "taxAssessments": {
+      "2020": {
+        "year": 2020,
+        "value": 336087,
+        "land": 70403,
+        "improvements": 265684
+      },
+      "2022": {
+        "year": 2022,
+        "value": 390611,
+        "land": 75000,
+        "improvements": 315611
+      },
+      "2023": {
+        "year": 2023,
+        "value": 449817,
+        "land": 105000,
+        "improvements": 344817
+      },
+      "2024": {
+        "year": 2024,
+        "value": 454538,
+        "land": 105000,
+        "improvements": 349538
+      },
+      "2025": {
+        "year": 2025,
+        "value": 491636,
+        "land": 105000,
+        "improvements": 386636
+      }
+    },
+    "propertyTaxes": {
+      "2019": {
+        "year": 2019,
+        "total": 6891
+      },
+      "2022": {
+        "year": 2022,
+        "total": 9562
+      },
+      "2023": {
+        "year": 2023,
+        "total": 7812
+      },
+      "2025": {
+        "year": 2025,
+        "total": 7891
+      }
+    },
+    "history": {
+      "2021-08-09": {
+        "event": "Sale",
+        "date": "2021-08-09T00:00:00.000Z"
+      }
+    }
+  }
+]

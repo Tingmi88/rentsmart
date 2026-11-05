@@ -1,0 +1,77 @@
+[
+  {
+    "id": "8184-Sw-73rd-Ln,-Gainesville,-FL-32608",
+    "formattedAddress": "8184 Sw 73rd Ln, Gainesville, FL 32608",
+    "addressLine1": "8184 Sw 73rd Ln",
+    "addressLine2": null,
+    "city": "Gainesville",
+    "state": "FL",
+    "stateFips": "12",
+    "zipCode": "32608",
+    "county": "Alachua",
+    "countyFips": "001",
+    "latitude": 29.586683,
+    "longitude": -82.428971,
+    "propertyType": "Single Family",
+    "bedrooms": 5,
+    "bathrooms": 4,
+    "squareFootage": 2784,
+    "lotSize": 7841,
+    "yearBuilt": 2010,
+    "assessorID": "07098-306-297",
+    "legalDescription": "LONGLEAF UNIT III PH VI PB 28 PG 17 LOT 297 OR 5002/1739",
+    "subdivision": "LONGLEAF",
+    "zoning": "PD",
+    "lastSaleDate": "2022-05-06T00:00:00.000Z",
+    "lastSalePrice": 501000,
+    "features": {
+      "cooling": true,
+      "coolingType": "Central",
+      "exteriorType": "Other",
+      "floorCount": 1,
+      "garage": true,
+      "garageType": "Garage",
+      "heating": true,
+      "heatingType": "Forced Air",
+      "roofType": "Asphalt",
+      "unitCount": 1
+    },
+    "taxAssessments": {
+      "2023": {
+        "year": 2023,
+        "value": 435736,
+        "land": 55000,
+        "improvements": 380736
+      },
+      "2024": {
+        "year": 2024,
+        "value": 457075,
+        "land": 81000,
+        "improvements": 376075
+      },
+      "2025": {
+        "year": 2025,
+        "value": 453845,
+        "land": 83000,
+        "improvements": 370845
+      }
+    },
+    "propertyTaxes": {
+      "2023": {
+        "year": 2023,
+        "total": 9524
+      },
+      "2024": {
+        "year": 2024,
+        "total": 9835
+      }
+    },
+    "history": {
+      "2022-05-06": {
+        "event": "Sale",
+        "date": "2022-05-06T00:00:00.000Z",
+        "price": 501000
+      }
+    }
+  }
+]

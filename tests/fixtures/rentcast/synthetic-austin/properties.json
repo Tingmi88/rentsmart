@@ -1,0 +1,150 @@
+[
+  {
+    "id": "4120-Sample-Dr,-Austin,-TX-78729",
+    "formattedAddress": "4120 Sample Dr, Austin, TX 78729",
+    "addressLine1": "4120 Sample Dr",
+    "addressLine2": null,
+    "city": "Austin",
+    "state": "TX",
+    "stateFips": "48",
+    "zipCode": "78729",
+    "county": "Williamson",
+    "countyFips": "491",
+    "latitude": 30.44,
+    "longitude": -97.77,
+    "propertyType": "Single Family",
+    "bedrooms": 4,
+    "bathrooms": 2.5,
+    "squareFootage": 1880,
+    "lotSize": 6000,
+    "yearBuilt": 1996,
+    "legalDescription": "SYNTHETIC LOT 1",
+    "subdivision": "SYNTHETIC",
+    "lastSaleDate": "2009-03-16T00:00:00.000Z",
+    "lastSalePrice": null,
+    "features": {
+      "cooling": true,
+      "coolingType": "Central",
+      "exteriorType": "Brick",
+      "fireplace": false,
+      "floorCount": 1,
+      "foundationType": "Slab",
+      "garage": true,
+      "garageSpaces": 2,
+      "garageType": "Garage",
+      "heating": true,
+      "heatingType": "Central",
+      "unitCount": 1
+    },
+    "taxAssessments": {
+      "2016": {
+        "year": 2016,
+        "value": 202900.0,
+        "land": null,
+        "improvements": null
+      },
+      "2017": {
+        "year": 2017,
+        "value": 227600.0,
+        "land": 48600.0,
+        "improvements": 179000.0
+      },
+      "2018": {
+        "year": 2018,
+        "value": 245100.0,
+        "land": 48600.0,
+        "improvements": 196500.0
+      },
+      "2019": {
+        "year": 2019,
+        "value": 251900.0,
+        "land": 52000.0,
+        "improvements": 199900.0
+      },
+      "2020": {
+        "year": 2020,
+        "value": 268700.0,
+        "land": 55700.0,
+        "improvements": 213000.0
+      },
+      "2021": {
+        "year": 2021,
+        "value": 286000.0,
+        "land": 63400.0,
+        "improvements": 222600.0
+      },
+      "2022": {
+        "year": 2022,
+        "value": 350300.0,
+        "land": 67500.0,
+        "improvements": 282800.0
+      },
+      "2023": {
+        "year": 2023,
+        "value": 482800.0,
+        "land": 85500.0,
+        "improvements": 397300.0
+      },
+      "2024": {
+        "year": 2024,
+        "value": 375600.0,
+        "land": 94500.0,
+        "improvements": 281100.0
+      },
+      "2025": {
+        "year": 2025,
+        "value": 445500.0,
+        "land": 94500.0,
+        "improvements": 351000.0
+      }
+    },
+    "propertyTaxes": {
+      "2016": {
+        "year": 2016,
+        "total": 5350.0
+      },
+      "2017": {
+        "year": 2017,
+        "total": 5660.0
+      },
+      "2018": {
+        "year": 2018,
+        "total": 5710.0
+      },
+      "2019": {
+        "year": 2019,
+        "total": 6100.0
+      },
+      "2020": {
+        "year": 2020,
+        "total": 6300.0
+      },
+      "2021": {
+        "year": 2021,
+        "total": 7660.0
+      },
+      "2022": {
+        "year": 2022,
+        "total": 10040.0
+      },
+      "2023": {
+        "year": 2023,
+        "total": 7100.0
+      },
+      "2024": {
+        "year": 2024,
+        "total": 7040.0
+      },
+      "2025": {
+        "year": 2025,
+        "total": 7770.0
+      }
+    },
+    "history": {
+      "2009-03-16": {
+        "event": "Sale",
+        "date": "2009-03-16T00:00:00.000Z"
+      }
+    }
+  }
+]

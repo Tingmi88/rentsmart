@@ -1,0 +1,32 @@
+[
+  {
+    "id": "123-Example-St,-Gainesville,-FL-32601",
+    "formattedAddress": "123 Example St, Gainesville, FL 32601",
+    "addressLine1": "123 Example St",
+    "addressLine2": null,
+    "city": "Gainesville",
+    "state": "FL",
+    "zipCode": "32601",
+    "county": "Alachua",
+    "latitude": 29.6516,
+    "longitude": -82.3248,
+    "propertyType": "Single Family",
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "squareFootage": 1450,
+    "lotSize": 7400,
+    "yearBuilt": 1987,
+    "lastSaleDate": "2016-05-12T00:00:00.000Z",
+    "lastSalePrice": 182000,
+    "taxAssessments": {
+      "2024": {"year": 2024, "value": 198000, "land": 45000, "improvements": 153000},
+      "2025": {"year": 2025, "value": 207500, "land": 47000, "improvements": 160500}
+    },
+    "propertyTaxes": {
+      "2024": {"year": 2024, "total": 3610},
+      "2025": {"year": 2025, "total": 3785}
+    },
+    "owner": {"names": ["SYNTHETIC OWNER"], "type": "Individual"},
+    "ownerOccupied": false
+  }
+]

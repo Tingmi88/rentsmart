@@ -1,0 +1,24 @@
+{% extends "_layout.html" %}
+{% block title %}Not cached · rentsmart{% endblock %}
+{% block body %}
+<header><p class="nav"><a href="/">← New address</a></p><h1>{{ address }}</h1></header>
+{% if similar %}
+<section class="card">
+  <h2>Did you mean</h2>
+  <p>This address hasn't been looked up, but these similar ones have. Picking one doesn't spend a call to find it.</p>
+  <ul class="similar">
+    {% for label, saved, link in similar %}<li><a href="{{ link }}">{{ label }}</a> <span class="cap">looked up {{ saved.strftime('%b') }} {{ saved.day }}, {{ saved.year }}</span></li>{% endfor %}
+  </ul>
+  <p class="cap">If its rent or market data has expired, you'll be asked before it's refreshed.</p>
+</section>
+{% endif %}
+<section class="card">
+  <h2>Not cached</h2>
+  <p>Running this brief costs <strong>up to 3 RentCast calls</strong>. {{ usage }} used this month on this machine.</p>
+  <p class="cap">A guide only: calls made on other machines or the RentCast dashboard aren't counted.</p>
+  <form action="/brief" method="post">
+    {% for name, value in query.items() %}<input type="hidden" name="{{ name }}" value="{{ value }}">{% endfor %}
+    <button type="submit">{% if similar %}Run as entered{% else %}Run{% endif %} (up to 3 calls)</button>
+  </form>
+</section>
+{% endblock %}

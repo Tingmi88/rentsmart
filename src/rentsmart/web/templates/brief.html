@@ -1,0 +1,31 @@
+{% extends "_layout.html" %}
+{% block title %}Rent brief · {{ street }}{% endblock %}
+{% block body %}
+<header>
+  {% if app %}<p class="nav"><a href="/">← New address</a></p>{% endif %}
+  <h1>{{ brief.facts.address.value }}</h1>
+  <p class="meta">{{ fact_line }}{{ ' · ' if fact_line else '' }}{% if brief.facts.match_confidence.value is not none %}match {{ '%.0f'|format(brief.facts.match_confidence.value * 100) }}% · {% endif %}brief {{ brief.generated_at.strftime('%Y-%m-%d') }} from {{ brief.provider }}</p>
+</header>
+<p class="warning"><strong>Not an appraisal.</strong> Built from listing <em>asking</em> prices, not signed leases, from one data vendor without MLS access.</p>
+{% if notice %}<p class="banner">{{ notice }}</p>{% endif %}
+{% if refresh %}
+<form class="banner refresh" action="/brief" method="post">
+  <span>Saved RentCast data from {{ refresh.saved_on.strftime('%b') }} {{ refresh.saved_on.day }}, {{ refresh.saved_on.year }} ({{ refresh.days_old }} days old).</span>
+  {% for name, value in query.items() %}<input type="hidden" name="{{ name }}" value="{{ value }}">{% endfor %}
+  <button type="submit">Refresh (about {{ refresh.calls }} call{{ 's' if refresh.calls != 1 else '' }})</button>
+</form>
+{% endif %}
+{% if app %}
+<form class="controls" data-whatif action="/brief" method="get">
+  <input type="hidden" name="address" value="{{ brief.input_address }}">
+  {% if entered is not none %}<input type="hidden" name="entered" value="{{ entered }}">{% endif %}
+  <label>Asking $<input type="number" name="asking" min="1" step="25" inputmode="numeric" value="{{ asking_value }}"></label>
+  {% if slider %}<input type="range" name="asking_range" min="{{ slider.min }}" max="{{ slider.max }}" step="{{ slider.step }}" value="{{ asking_value or slider.mid }}" aria-label="Asking rent">{% endif %}
+  <label>Listed <input type="date" name="listed" value="{{ listed }}" max="{{ today }}"></label>
+  <noscript><button type="submit">Update</button></noscript>
+</form>
+{% endif %}
+<div id="live">
+{% include "_live.html" %}
+</div>
+{% endblock %}

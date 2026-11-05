@@ -1,0 +1,13 @@
+{% extends "_layout.html" %}
+{% block title %}Error · rentsmart{% endblock %}
+{% block body %}
+<header><p class="nav"><a href="/">← New address</a></p><h1>{{ address }}</h1></header>
+<section class="card error">
+  <h2>{{ err.__class__.__name__ }} · exit {{ err.exit_code|int }}</h2>
+  <p>{{ err.message }}</p>
+  {% if links %}
+  <p>Pick one:</p>
+  <ul>{% for text, href in links %}<li><a href="{{ href }}">{{ text }}</a></li>{% endfor %}</ul>
+  {% endif %}
+</section>
+{% endblock %}

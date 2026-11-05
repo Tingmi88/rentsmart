@@ -1,0 +1,14 @@
+{
+  "rent": 2050,
+  "rentRangeLow": 1850,
+  "rentRangeHigh": 2250,
+  "latitude": 29.6516,
+  "longitude": -82.3248,
+  "comparables": [
+    {"id": "c1", "formattedAddress": "140 Sample Ave, Gainesville, FL 32601", "propertyType": "Single Family", "bedrooms": 3, "bathrooms": 2, "squareFootage": 1400, "yearBuilt": 1990, "status": "Active", "price": 2100, "listingType": "Standard", "listedDate": "2026-09-20T00:00:00.000Z", "removedDate": null, "lastSeenDate": "2026-10-18T00:00:00.000Z", "daysOnMarket": 28, "distance": 0.3, "daysOld": 2, "correlation": 0.97},
+    {"id": "c2", "formattedAddress": "88 Fixture Rd, Gainesville, FL 32601", "propertyType": "Single Family", "bedrooms": 3, "bathrooms": 2, "squareFootage": 1520, "yearBuilt": 1984, "status": "Active", "price": 1995, "listingType": "Standard", "listedDate": "2026-09-28T00:00:00.000Z", "removedDate": null, "lastSeenDate": "2026-10-18T00:00:00.000Z", "daysOnMarket": 20, "distance": 0.6, "daysOld": 2, "correlation": 0.95},
+    {"id": "c3", "formattedAddress": "17 Mock Ln, Gainesville, FL 32601", "propertyType": "Single Family", "bedrooms": 4, "bathrooms": 2, "squareFootage": 1610, "yearBuilt": 1979, "status": "Active", "price": 2250, "listingType": "Standard", "listedDate": "2026-10-02T00:00:00.000Z", "removedDate": null, "lastSeenDate": "2026-10-18T00:00:00.000Z", "daysOnMarket": 16, "distance": 0.9, "daysOld": 2, "correlation": 0.92},
+    {"id": "c4", "formattedAddress": "301 Stub Ct, Gainesville, FL 32603", "propertyType": "Single Family", "bedrooms": 3, "bathrooms": 1.5, "squareFootage": 1300, "yearBuilt": 1972, "status": "Inactive", "price": 1875, "listingType": "Standard", "listedDate": "2026-07-30T00:00:00.000Z", "removedDate": "2026-08-25T00:00:00.000Z", "lastSeenDate": "2026-08-25T00:00:00.000Z", "daysOnMarket": 26, "distance": 1.2, "daysOld": 56, "correlation": 0.9},
+    {"id": "c5", "formattedAddress": "9 Example Way, Gainesville, FL 32605", "propertyType": "Single Family", "bedrooms": 3, "bathrooms": 2, "squareFootage": 1480, "yearBuilt": 1995, "status": "Inactive", "price": 2150, "listingType": "Standard", "listedDate": "2026-08-05T00:00:00.000Z", "removedDate": "2026-09-01T00:00:00.000Z", "lastSeenDate": "2026-09-01T00:00:00.000Z", "daysOnMarket": 27, "distance": 1.4, "daysOld": 49, "correlation": 0.89}
+  ]
+}

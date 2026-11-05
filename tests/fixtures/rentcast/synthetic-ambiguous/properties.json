@@ -1,0 +1,4 @@
+[
+  {"id": "a1", "formattedAddress": "500 Sample Blvd, Apt 1, Gainesville, FL 32601", "addressLine1": "500 Sample Blvd", "addressLine2": "Apt 1", "city": "Gainesville", "state": "FL", "zipCode": "32601", "propertyType": "Apartment", "bedrooms": 2, "bathrooms": 1, "squareFootage": 900},
+  {"id": "a2", "formattedAddress": "500 Sample Blvd, Apt 2, Gainesville, FL 32601", "addressLine1": "500 Sample Blvd", "addressLine2": "Apt 2", "city": "Gainesville", "state": "FL", "zipCode": "32601", "propertyType": "Apartment", "bedrooms": 2, "bathrooms": 1, "squareFootage": 920}
+]

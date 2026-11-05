@@ -1,0 +1,16 @@
+[
+  {
+    "id": "2302-Salvador-St,-Apt-1,-Cincinnati,-OH-45230",
+    "formattedAddress": "2302 Salvador St, Apt 1, Cincinnati, OH 45230",
+    "addressLine1": "2302 Salvador St",
+    "addressLine2": "Apt 1",
+    "city": "Cincinnati",
+    "state": "OH",
+    "stateFips": "39",
+    "zipCode": "45230",
+    "county": "Hamilton",
+    "countyFips": "061",
+    "latitude": 39.096369,
+    "longitude": -84.385627
+  }
+]
