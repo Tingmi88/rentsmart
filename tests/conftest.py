@@ -24,6 +24,7 @@ from rentsmart.providers.rentcast import (
 from rentsmart.providers.replay import replay_provider
 
 FIXTURES = Path(__file__).parent / "fixtures" / "rentcast"
+ZORI_SAMPLE = Path(__file__).parent / "fixtures" / "zori" / "Zip_zori_sample.csv"
 TODAY = date(2026, 10, 20)
 ADDRESS = "123 Example St, Gainesville, FL 32601"
 AUSTIN = "4120 Sample Dr, Austin, TX 78729"
@@ -41,6 +42,7 @@ def no_live_http(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Iterator[re
     monkeypatch.delenv("RENTSMART_CACHE_DAYS", raising=False)
     monkeypatch.delenv("RENTCAST_API_KEY", raising=False)
     monkeypatch.delenv("RENTSMART_STALE_AFTER_DAYS", raising=False)
+    monkeypatch.delenv("RENTSMART_ZORI_CSV", raising=False)
     # Plain, unwrapped CLI output everywhere (CI forces Rich color and box drawing).
     for var in ("FORCE_COLOR", "GITHUB_ACTIONS", "TTY_COMPATIBLE"):
         monkeypatch.delenv(var, raising=False)

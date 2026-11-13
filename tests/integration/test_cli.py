@@ -13,7 +13,7 @@ from rentsmart import cli
 from rentsmart.contracts import Brief, ExitCode
 from rentsmart.providers.cache import ResponseCache, default_cache_dir
 from rentsmart.providers.rentcast import PROPERTIES_PATH, RENT_AVM_PATH
-from tests.conftest import ADDRESS, TODAY, load_fixture, route_fixtures
+from tests.conftest import ADDRESS, TODAY, ZORI_SAMPLE, load_fixture, route_fixtures
 
 runner = CliRunner()
 
@@ -307,3 +307,31 @@ def test_no_html_file_on_failure(no_live_http: respx.MockRouter, tmp_path: Path)
     result = runner.invoke(cli.app, [ADDRESS, "--html", str(out)])
     assert result.exit_code == ExitCode.ADDRESS_NOT_FOUND
     assert not out.exists()
+
+
+def test_zip_rent_trend_from_zori_file(
+    no_live_http: respx.MockRouter, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    route_fixtures(no_live_http, slug="synthetic-austin")
+    monkeypatch.setenv("RENTSMART_ZORI_CSV", str(ZORI_SAMPLE))
+    result = runner.invoke(cli.app, ["4120 Sample Dr, Austin, TX 78729"])
+    assert "ZIP RENT TREND (zip 78729)" in result.output
+    assert "-2.4% over 12 months" in result.output and "Zillow" in result.output
+    as_json = runner.invoke(cli.app, ["4120 Sample Dr, Austin, TX 78729", "--json"])
+    assert Brief.model_validate_json(as_json.stdout).zip_rent_change is not None
+
+
+def test_zip_rent_trend_absent_without_file(no_live_http: respx.MockRouter) -> None:
+    route_fixtures(no_live_http, slug="synthetic-austin")
+    result = runner.invoke(cli.app, ["4120 Sample Dr, Austin, TX 78729"])
+    assert "ZIP RENT TREND" not in result.output
+
+
+def test_bad_zori_path_is_a_config_error(
+    no_live_http: respx.MockRouter, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    route_fixtures(no_live_http, slug="synthetic-austin")
+    monkeypatch.setenv("RENTSMART_ZORI_CSV", str(tmp_path / "missing.csv"))
+    result = runner.invoke(cli.app, ["4120 Sample Dr, Austin, TX 78729"])
+    assert result.exit_code == ExitCode.CONFIG_ERROR
+    assert no_live_http.calls.call_count == 0  # checked before any paid call

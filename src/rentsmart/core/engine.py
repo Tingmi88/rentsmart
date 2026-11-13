@@ -6,7 +6,7 @@ from rentsmart.contracts import AddressNotFound, AmbiguousAddress, Brief, Market
 from rentsmart.core.facts import OwnerFacts, build_facts
 from rentsmart.core.freshness import DEFAULT_STALE_AFTER_DAYS, TAX_STALE_AFTER_DAYS, flag_stale
 from rentsmart.core.listing import CurrentListing, build_listing_check
-from rentsmart.core.market import build_market
+from rentsmart.core.market import build_market, build_rent_change
 from rentsmart.core.pricing import (
     MIN_COMPS,
     NO_MLS,
@@ -18,7 +18,7 @@ from rentsmart.core.pricing import (
 )
 from rentsmart.core.rules import QUESTION_RULES, SUGGESTION_RULES, run_rules
 from rentsmart.core.scenarios import build_scenarios
-from rentsmart.providers.base import Provider, SubjectQuery
+from rentsmart.providers.base import Provider, RentIndexProvider, SubjectQuery
 
 DISCLAIMER = "Not an appraisal; not financial, legal, or tax advice."
 LOW_MATCH_CONFIDENCE = 0.8
@@ -32,6 +32,7 @@ def build_brief(
     today: date | None = None,
     stale_after_days: int = DEFAULT_STALE_AFTER_DAYS,
     listing: CurrentListing | None = None,
+    rent_index: RentIndexProvider | None = None,
 ) -> Brief:
     today = today or date.today()
 
@@ -50,6 +51,11 @@ def build_brief(
         baths=facts.baths.value if facts.baths else None,
         sqft=facts.sqft.value if facts.sqft else None,
     )
+    # Local and free: read it before the paid calls, so a bad file costs nothing.
+    rent_change = None
+    if rent_index is not None:
+        rent_change = build_rent_change(rent_index.rent_index(record.zip_code))
+        rent_change = rent_change and flag_stale(rent_change, today, stale_after_days)
     rent_record = provider.rent_estimate(subject)
     market_record = provider.market_stats(record.zip_code)
 
@@ -102,13 +108,17 @@ def build_brief(
         listing=listing and build_listing_check(listing, rent, recent, market, comps, today),
         comps=comps,
         market=market,
+        zip_rent_change=rent_change,
         property_tax=tax,
         scenarios=build_scenarios(rent, market),
         suggestions=[],
         agent_questions=[],
         notices=notices,
         too_few_comps=too_few_comps,
-        stale=any(e is not None and e.stale for e in (rent, market.median_days_on_market, tax)),
+        stale=any(
+            e is not None and e.stale
+            for e in (rent, market.median_days_on_market, rent_change, tax)
+        ),
     )
     return brief.model_copy(
         update={

@@ -85,6 +85,12 @@
       {% else %}
       <p class="none">No market statistics.</p>
       {% endif %}
+      {% set rc = brief.zip_rent_change %}
+      {% if rc and rc.value is not none %}
+      <h2>Zip rent trend</h2>
+      <p class="big">{{ '%+.1f'|format(rc.value * 100) }}% <small>over 12 months</small></p>
+      {{ tag(rc) }}{{ because(rc) }}
+      {% endif %}
     </div>
     <div>
       <h2>Property tax</h2>

@@ -169,8 +169,9 @@ Every value is tagged `[kind · source · as of date]`:
 ## Data sources
 
 All data comes from the RentCast API: property records, tax, the rent estimate,
-rental comps, and zip-level market statistics. No MLS, no Zillow, no scraping, and
-no owner or personal data. See [docs/data-sources.md](docs/data-sources.md) for which
+rental comps, and zip-level market statistics. No MLS, no scraping, and no owner or
+personal data. Optionally, a zip rent trend from Zillow's Observed Rent Index
+(below). See [docs/data-sources.md](docs/data-sources.md) for which
 endpoint feeds each section, what the vendor fields mean, and freshness rules.
 
 ## API usage and the cache
@@ -186,9 +187,21 @@ only the rent estimate (1 request).
 | `RENTSMART_CACHE_DAYS` | 7 | How long cached responses are reused; `0` disables |
 | `RENTSMART_CACHE_DIR` | `~/.cache/rentsmart` | Where the cache lives |
 | `RENTSMART_STALE_AFTER_DAYS` | 90 | When data is flagged stale |
+| `RENTSMART_ZORI_CSV` | unset | Path to a ZORI file; adds the zip rent trend (below) |
 
 The cache holds addresses and property data, never your API key. Errors and quota
 failures are never cached. Delete the folder to clear it.
+
+### Zip rent trend (optional)
+
+To add how rents in the zip changed over the last 12 months, download the ZIP-level
+"ZORI (Smoothed): All Homes Plus Multifamily Time Series" CSV from
+[Zillow Research](https://www.zillow.com/research/data/)
+(`Zip_zori_uc_sfrcondomfr_sm_month.csv`) and point
+`RENTSMART_ZORI_CSV` at it. rentsmart reads the file locally and never contacts
+Zillow. ZORI tracks asking rents for all home types, including apartments, so only
+its change is shown, never its dollar level. Re-download it monthly; it's flagged
+stale after 90 days. Data credit: Zillow.
 
 ## What it does not do
 

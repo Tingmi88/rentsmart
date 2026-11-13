@@ -134,6 +134,8 @@ class Brief(BaseModel):
     listing: ListingCheck | None = None
     comps: list[Envelope[Comp]]
     market: MarketSpeed
+    # Change in a zip-level rent index over 12 months (e.g. -0.019), when one is configured.
+    zip_rent_change: Envelope[float] | None = None
     property_tax: Envelope[float] | None
     scenarios: list[Envelope[Scenario]]
     suggestions: list[Envelope[str]]

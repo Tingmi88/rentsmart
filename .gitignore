@@ -9,3 +9,6 @@ build/
 .env
 .DS_Store
 .private/
+# Zillow ZORI downloads stay local (tests use tests/fixtures/zori/, made up)
+*zori*.csv
+!tests/fixtures/zori/*.csv

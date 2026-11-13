@@ -75,4 +75,6 @@ weaken the validators to make data fit; fix the data or omit the value.
 - No scraping of sites whose terms forbid it. No Zillow API use or scraping.
   The UI may show plain address-search links (web search, Zillow) that open in
   the user's browser; the app never fetches them, and they are look-ups, not
-  listing evidence.
+  listing evidence. It may read a ZORI CSV the user downloaded from Zillow
+  Research (`RENTSMART_ZORI_CSV`) for zip rent trend only, credited to Zillow.
+  Never fetch it, and never commit the real file (tests use a made-up sample).
