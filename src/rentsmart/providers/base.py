@@ -55,6 +55,17 @@ class MarketRecord(BaseModel):
     as_of: date | None = None
 
 
+class RentIndexRecord(BaseModel):
+    """A zip-level rent index from a secondary source, read beside the main provider."""
+
+    zip_code: str
+    source: str
+    # (month, index level in dollars), oldest first.
+    history: list[tuple[date, float]] = Field(default_factory=list[tuple[date, float]])
+    # What the source measures and how; shown with any value built from it.
+    limitations: list[str] = Field(default_factory=list[str])
+
+
 class SubjectQuery(BaseModel):
     """The property to price, after owner-supplied facts override vendor facts."""
 
@@ -75,3 +86,13 @@ class Provider(Protocol):
     def rent_estimate(self, subject: SubjectQuery) -> RentEstimateRecord: ...
 
     def market_stats(self, zip_code: str) -> MarketRecord: ...
+
+
+class RentIndexProvider(Protocol):
+    """Optional second source: a zip-level rent index, for trend context only."""
+
+    name: str
+
+    def rent_index(self, zip_code: str) -> RentIndexRecord | None:
+        """The zip's series, or None if the source doesn't cover it."""
+        ...

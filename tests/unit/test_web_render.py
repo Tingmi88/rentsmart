@@ -115,3 +115,14 @@ def test_comp_rows_link_to_search_and_zillow() -> None:
 def test_index_form_remembers_last_entry() -> None:
     html = render_index(usage=0)
     assert "data-remember" in html and "data-clear" in html
+
+
+def test_market_panel_shows_zip_rent_trend() -> None:
+    from rentsmart.core.market import build_rent_change
+    from rentsmart.providers.zori import ZoriFile
+    from tests.conftest import ZORI_SAMPLE
+
+    change = build_rent_change(ZoriFile(ZORI_SAMPLE).rent_index("78729"))
+    html = render_page(austin_brief().model_copy(update={"zip_rent_change": change}))
+    assert "Zip rent trend" in html and "-2.4%" in html and "Zillow" in html
+    assert "Zip rent trend" not in render_page(austin_brief())

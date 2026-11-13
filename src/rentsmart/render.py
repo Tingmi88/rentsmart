@@ -127,6 +127,14 @@ def render(brief: Brief) -> str:
     if trend is not None:
         add(f"  Trend: {trend.value}  {_meta(trend)}")
 
+    change = brief.zip_rent_change
+    if change is not None and change.value is not None:
+        add("")
+        add(f"ZIP RENT TREND (zip {brief.market.zip_code})")
+        add(f"  {change.value:+.1%} over 12 months  {_meta(change)}")
+        add(f"    {'; '.join(change.evidence)}")
+        out.extend(_limits(change))
+
     add("")
     add("PROPERTY TAX (annual)")
     tax = brief.property_tax

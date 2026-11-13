@@ -13,7 +13,7 @@ from rentsmart.core.facts import OwnerFacts
 from rentsmart.core.listing import CurrentListing
 from rentsmart.providers.rentcast import RentCastProvider
 from rentsmart.render import render
-from rentsmart.settings import response_cache, stale_after_days, usage_log
+from rentsmart.settings import rent_index, response_cache, stale_after_days, usage_log
 from rentsmart.web.render import render_page
 
 app = typer.Typer(
@@ -93,6 +93,7 @@ def main(
             today=today,
             stale_after_days=stale_after_days(),
             listing=listing,
+            rent_index=rent_index(),
         )
     except RentsmartError as err:
         if as_json:

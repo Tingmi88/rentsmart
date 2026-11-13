@@ -31,7 +31,7 @@ from rentsmart.core.facts import OwnerFacts
 from rentsmart.core.listing import CurrentListing
 from rentsmart.providers.cache import CacheMiss, default_cache_dir
 from rentsmart.providers.rentcast import RentCastProvider
-from rentsmart.settings import response_cache, stale_after_days, usage_log
+from rentsmart.settings import rent_index, response_cache, stale_after_days, usage_log
 from rentsmart.web import render
 
 DEFAULT_PORT = 8765
@@ -177,6 +177,7 @@ def create_app(port: int = DEFAULT_PORT, today: Callable[[], date] = date.today)
             today=day,
             stale_after_days=stale_after_days(),
             listing=listing,
+            rent_index=rent_index(),
         )
         return brief, [at for at in provider.saved_at.values() if not window.is_fresh(at)]
 

@@ -2,6 +2,7 @@
 
 import os
 from datetime import timedelta
+from pathlib import Path
 
 from rentsmart.contracts import ConfigError
 from rentsmart.core.freshness import DEFAULT_STALE_AFTER_DAYS
@@ -12,8 +13,10 @@ from rentsmart.providers.cache import (
     UsageLog,
     default_cache_dir,
 )
+from rentsmart.providers.zori import ZoriFile
 
 STALE_ENV = "RENTSMART_STALE_AFTER_DAYS"
+ZORI_ENV = "RENTSMART_ZORI_CSV"
 
 
 def _whole_days(env: str, default: int) -> int:
@@ -43,3 +46,16 @@ def response_cache(refresh: bool = False, *, any_age: bool = False) -> ResponseC
 
 def usage_log() -> UsageLog:
     return UsageLog(default_cache_dir())
+
+
+def rent_index() -> ZoriFile | None:
+    """The user's downloaded ZORI file, or None when RENTSMART_ZORI_CSV isn't set."""
+    raw = os.environ.get(ZORI_ENV, "").strip()
+    if not raw:
+        return None
+    path = Path(raw).expanduser()
+    if not path.is_file():
+        raise ConfigError(f"{ZORI_ENV} points to {path}, which isn't a file.")
+    zori = ZoriFile(path)
+    zori.check()
+    return zori

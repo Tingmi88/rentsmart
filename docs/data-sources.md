@@ -51,12 +51,28 @@ nothing else.
 
 A brief built from cached responses says when they were retrieved.
 
+## Optional: zip rent trend (ZORI)
+
+| Brief section | Source | Fields used | `kind` | `as_of` means |
+|---|---|---|---|---|
+| Zip rent trend | Zillow Observed Rent Index, zip-level CSV the user downloaded (`RENTSMART_ZORI_CSV`) | `RegionName`, `RegionType`, monthly columns | `computed` | The file's latest month |
+
+- The value is the change between the latest month and the same month a year
+  earlier. With no value for that earlier month, nothing is shown.
+- ZORI is a repeat-rent index of **asking** rents across all home types, including
+  apartments, smoothed over 3 months. Its dollar level differs from RentCast's zip
+  medians and from single-family rents, so only the change is shown.
+- It is context only: it doesn't feed the rent estimate, scenarios, or rules.
+- Zillow requires attribution, so the source on every ZORI value names Zillow.
+- The file is read on your machine; rentsmart never contacts Zillow.
+
 ## Not used
 
 - **MLS**: not available to rentsmart. Agents may see newer listings and closed
   leases.
 - **Zillow**: no open API; rentsmart does not scrape it or any site whose terms
-  forbid it.
+  forbid it. The one exception is the optional ZORI file below, which you
+  download yourself.
 - **Owner and personal data**: RentCast can return owner names and mailing
   addresses. The adapter never reads them, and `scripts/record_fixtures.py` strips
   them before saving test fixtures.

@@ -136,7 +136,10 @@ rentsmart "123 Example St, ..." --json
   the live API.
 - Zillow has no open API; do not use or scrape it. The UI may link each
   comp to a Zillow address search that opens in the user's browser; the app
-  never fetches Zillow.
+  never fetches Zillow. Optionally, the brief shows the 12-month change in
+  Zillow's Observed Rent Index (ZORI) for the zip, read from a CSV the user
+  downloaded and credited to Zillow. It is trend context only: never a price,
+  and never an input to the rent estimate, scenarios, or rules.
 - MLS data is not available to us; agents may see newer listings. State
   this in the output where relevant.
 - Future providers (ATTOM, county records) must be addable without
