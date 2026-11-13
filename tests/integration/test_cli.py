@@ -335,3 +335,15 @@ def test_bad_zori_path_is_a_config_error(
     result = runner.invoke(cli.app, ["4120 Sample Dr, Austin, TX 78729"])
     assert result.exit_code == ExitCode.CONFIG_ERROR
     assert no_live_http.calls.call_count == 0  # checked before any paid call
+
+
+def test_bad_zori_row_fails_before_any_call(
+    no_live_http: respx.MockRouter, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    route_fixtures(no_live_http, slug="synthetic-austin")
+    bad = tmp_path / "zori.csv"
+    bad.write_text(ZORI_SAMPLE.read_text().replace("1944.00", "N/A"))
+    monkeypatch.setenv("RENTSMART_ZORI_CSV", str(bad))
+    result = runner.invoke(cli.app, ["4120 Sample Dr, Austin, TX 78729"])
+    assert result.exit_code == ExitCode.CONFIG_ERROR and "isn't a number" in result.output
+    assert no_live_http.calls.call_count == 0

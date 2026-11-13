@@ -51,7 +51,7 @@ def build_brief(
         baths=facts.baths.value if facts.baths else None,
         sqft=facts.sqft.value if facts.sqft else None,
     )
-    # Local and free: read it before the paid calls, so a bad file costs nothing.
+    # Local and free. The file was fully validated when the setting was read, before any call.
     rent_change = None
     if rent_index is not None:
         rent_change = build_rent_change(rent_index.rent_index(record.zip_code))
@@ -115,10 +115,9 @@ def build_brief(
         agent_questions=[],
         notices=notices,
         too_few_comps=too_few_comps,
-        stale=any(
-            e is not None and e.stale
-            for e in (rent, market.median_days_on_market, rent_change, tax)
-        ),
+        # The zip rent trend is optional context: it shows its own STALE flag but doesn't
+        # make the brief stale, since --refresh can't renew a file the user downloads.
+        stale=any(e is not None and e.stale for e in (rent, market.median_days_on_market, tax)),
     )
     return brief.model_copy(
         update={

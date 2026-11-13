@@ -80,10 +80,23 @@ def test_brief_carries_rent_change_and_flags_it_stale(fake_provider: FakeProvide
     assert brief.zip_rent_change is not None and brief.zip_rent_change.value == 0.04
     assert not brief.zip_rent_change.stale
 
-    late = build_brief(
-        ADDRESS, OwnerFacts(), fake_provider, today=date(2027, 3, 1), rent_index=zori
-    )
-    assert late.zip_rent_change is not None and late.zip_rent_change.stale and late.stale
+
+class _OldIndex:
+    """A rent index whose latest month is over a year before TODAY."""
+
+    name = "old index"
+
+    def rent_index(self, zip_code: str) -> RentIndexRecord:
+        history = [(date(2024, 6, 30), 1000.0), (date(2025, 6, 30), 1030.0)]
+        return RentIndexRecord(zip_code=zip_code, source="old index", history=history)
+
+
+def test_old_index_is_stale_but_never_makes_the_brief_stale(
+    fake_provider: FakeProvider,
+) -> None:
+    brief = build_brief(ADDRESS, OwnerFacts(), fake_provider, today=TODAY, rent_index=_OldIndex())
+    assert brief.zip_rent_change is not None and brief.zip_rent_change.stale
+    assert not brief.stale  # optional context never fails the brief or its exit code
 
 
 def test_settings_rent_index(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -112,3 +125,23 @@ def test_settings_reject_a_non_zori_file(monkeypatch: pytest.MonkeyPatch, tmp_pa
     monkeypatch.setenv(ZORI_ENV, str(other))
     with pytest.raises(ConfigError, match="ZORI"):
         rent_index()
+
+
+@pytest.mark.parametrize(
+    ("content", "message"),
+    [
+        (b"\xff\xfe\x00binary", "not a UTF-8 text file"),
+        (b"RegionName,RegionType,2026-02-30\n78729,zip,1\n", "isn't a real date"),
+        (b"RegionName,RegionType,2026-09-30\n78729,zip\n", "line 2 has 2 columns"),
+        (
+            b"RegionName,RegionType,2026-09-30\n78729,zip,N/A\n",
+            "line 2 has a rent that isn't a number",
+        ),
+        (b'RegionName,RegionType,2026-09-30\n78729,zip,"' + b"9" * 200_000 + b'"\n', "valid CSV"),
+    ],
+)
+def test_bad_files_are_config_errors_at_check(tmp_path: Path, content: bytes, message: str) -> None:
+    path = tmp_path / "zori.csv"
+    path.write_bytes(content)
+    with pytest.raises(ConfigError, match=message):
+        ZoriFile(path).check()

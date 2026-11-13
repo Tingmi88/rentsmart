@@ -6,8 +6,11 @@ requires attribution, so the source name travels with every value built from it.
 """
 
 import csv
+import math
 import re
-from collections.abc import Sequence
+from array import array
+from collections.abc import Iterator
+from dataclasses import dataclass
 from datetime import date
 from functools import lru_cache
 from pathlib import Path
@@ -24,6 +27,13 @@ LIMITATIONS = [
 _MONTH = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
+@dataclass(frozen=True)
+class _Index:
+    months: list[date]
+    # zip -> one value per month, NaN where the file has none. ~10 MB for the national file.
+    by_zip: dict[str, array[float]]
+
+
 class ZoriFile:
     name = SOURCE
 
@@ -31,45 +41,67 @@ class ZoriFile:
         self.path = path
 
     def check(self) -> None:
-        """Fail early, before any paid call, if the file can't be read or isn't ZORI."""
-        try:
-            with self.path.open(newline="", encoding="utf-8") as f:
-                _months(self.path, next(csv.reader(f), list[str]()))
-        except OSError as err:
-            raise ConfigError(f"Could not read the ZORI file {self.path}: {err.strerror}") from None
+        """Read and validate the whole file now, so a bad file fails before any paid call."""
+        self._index()
 
     def rent_index(self, zip_code: str) -> RentIndexRecord | None:
+        index = self._index()
+        values = index.by_zip.get(zip_code)
+        if values is None:
+            return None
+        history = [(m, v) for m, v in zip(index.months, values, strict=True) if not math.isnan(v)]
+        return RentIndexRecord(
+            zip_code=zip_code, source=SOURCE, history=history, limitations=LIMITATIONS
+        )
+
+    def _index(self) -> _Index:
         try:
             modified = self.path.stat().st_mtime_ns
         except OSError as err:
-            raise ConfigError(f"Could not read the ZORI file {self.path}: {err.strerror}") from None
-        # The local UI rebuilds the brief on every what-if; don't reread 10 MB each time.
-        return _lookup(self.path, modified, zip_code)
+            raise _unreadable(self.path, err.strerror) from None
+        return _load(self.path, modified)
 
 
-@lru_cache(maxsize=64)
-def _lookup(path: Path, modified: int, zip_code: str) -> RentIndexRecord | None:
-    """One zip's series. `modified` is in the key so a re-downloaded file is read again."""
+def _unreadable(path: Path, reason: object) -> ConfigError:
+    return ConfigError(f"Could not read the ZORI file {path}: {reason}")
+
+
+@lru_cache(maxsize=2)
+def _load(path: Path, modified: int) -> _Index:
+    """Parse the file once per version (`modified` is in the key, so a re-download is reread)."""
     try:
         with path.open(newline="", encoding="utf-8") as f:
-            reader = csv.DictReader(f)
-            months = _months(path, reader.fieldnames or [])
-            for row in reader:
-                if row["RegionType"] != "zip" or row["RegionName"].zfill(5) != zip_code:
-                    continue
-                history = [(date.fromisoformat(m), float(row[m])) for m in months if row[m].strip()]
-                return RentIndexRecord(
-                    zip_code=zip_code, source=SOURCE, history=history, limitations=LIMITATIONS
-                )
+            return _parse(path, csv.reader(f))
     except OSError as err:
-        raise ConfigError(f"Could not read the ZORI file {path}: {err.strerror}") from None
-    except ValueError as err:
-        raise ConfigError(f"{path} has a value that isn't a number: {err}") from None
-    return None
+        raise _unreadable(path, err.strerror) from None
+    except UnicodeDecodeError:
+        raise _unreadable(path, "not a UTF-8 text file (download the CSV, not XLSX)") from None
+    except csv.Error as err:
+        raise _unreadable(path, f"not a valid CSV ({err})") from None
 
 
-def _months(path: Path, columns: Sequence[str]) -> list[str]:
-    months = [c for c in columns if _MONTH.match(c)]
-    if not {"RegionName", "RegionType"} <= set(columns) or not months:
-        raise ConfigError(f"{path} doesn't look like a zip-level ZORI CSV from Zillow Research.")
-    return months
+def _parse(path: Path, rows: Iterator[list[str]]) -> _Index:
+    not_zori = ConfigError(f"{path} doesn't look like a zip-level ZORI CSV from Zillow Research.")
+    header = next(rows, None)
+    if header is None or not {"RegionName", "RegionType"} <= set(header):
+        raise not_zori
+    month_cols = [i for i, c in enumerate(header) if _MONTH.match(c)]
+    try:
+        months = [date.fromisoformat(header[i]) for i in month_cols]
+    except ValueError:
+        raise ConfigError(f"{path} has a month column that isn't a real date.") from None
+    if not months:
+        raise not_zori
+    name, kind = header.index("RegionName"), header.index("RegionType")
+    by_zip: dict[str, array[float]] = {}
+    for line, row in enumerate(rows, start=2):
+        if len(row) != len(header):
+            raise ConfigError(f"{path} line {line} has {len(row)} columns, expected {len(header)}.")
+        if row[kind] != "zip":
+            continue
+        try:
+            values = array("d", (float(row[i]) if row[i].strip() else math.nan for i in month_cols))
+        except ValueError:
+            raise ConfigError(f"{path} line {line} has a rent that isn't a number.") from None
+        by_zip[row[name].zfill(5)] = values
+    return _Index(months, by_zip)
